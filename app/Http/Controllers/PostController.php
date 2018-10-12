@@ -17,10 +17,11 @@ class PostController extends Controller
     public function index()
     {
         //return Post::all();
-        return view('post',[
+        /*return view('post',[
             'title' => 'New Title ~~~',
             'posts' => Post::all()
-        ]);
+        ]);*/
+        return Post::simplePaginate(10);
     }
 
     /**
