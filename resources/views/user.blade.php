@@ -6,6 +6,7 @@
         $('.btn-delete').click(function(){
             if( confirm ('Delete' + $(this).data('id'))){
                 location.href = '/user/delete/' + $(this).data('id');
+                //return redirect()->action('UserController@destroy',['id' => 1]);  //error method!!
             }
         })
     })

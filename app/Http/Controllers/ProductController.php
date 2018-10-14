@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use Validator;
 
-class UserController extends Controller
+use App\Http\Requests;  //待驗證~~~
+use App\Product;
+
+
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,12 +17,46 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('user',[
-            'users' => User::all()
-        ]);
+        return Product::all();
     }
 
-    /**
+
+     public function list()
+    {
+        return view('product-list');
+    }
+
+    
+    public function add_cart(Request $request, $id){
+        
+        $prev = $request->session()->get('cart');
+        $arr = [];
+        if($prev != null){
+            $arr = json_decode($prev);
+        }
+        $arr[] = $id;
+        $request->session()->put('cart',json_encode($arr));
+        return [
+            'status' => true
+        ];
+    }
+
+
+    public function list_cart(Request $request){
+        $id_list = json_decode($request->session()->get('cart'));
+        $prod_list = [];
+        foreach($id_list as $id){
+            $prod_list[] = Product::find($id);
+        }
+        return $prod_list;
+    }
+
+
+    public function cart(){
+        return view('cart');
+    }
+
+     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -29,8 +65,7 @@ class UserController extends Controller
     {
         //
     }
-
-    /**
+     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -38,22 +73,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(),[
-            'name' => 'required|max:10',
-            'email'  => 'required|unique:users',
-            'password'=> 'required|confirmed'
-        ]);
-        if($validator->fails()){
-            return redirect('/user')
-                    ->withErrors($validator)
-                    ->withInput();
-        }
-        User::create($request -> all());
-
-        return redirect('/user');
+        //
     }
-
-    /**
+     /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -61,10 +83,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        return Product::find($id);
     }
-
-    /**
+     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -74,8 +95,7 @@ class UserController extends Controller
     {
         //
     }
-
-    /**
+     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -86,8 +106,7 @@ class UserController extends Controller
     {
         //
     }
-
-    /**
+     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -95,8 +114,6 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        User::destroy($id);
-        return redirect('/user');
-        //return redirect()->action('UserController@index');
+        //
     }
 }

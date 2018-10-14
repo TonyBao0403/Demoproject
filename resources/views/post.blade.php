@@ -25,7 +25,7 @@ if(query.page != undefined){
 
 
 $(function(){
-    $.getJSON('/api/posts/' + page,function(resp){
+    $.getJSON('/api/posts/' + page ,function(resp){
         for(var index in resp.data){
             var obj = resp.data[index];
             $('#tbody').append( '<tr><td>' + obj.id + '</td><td><a href=" /posts/'+ obj.id + '">'+ obj.title + '</a></td></tr>');
