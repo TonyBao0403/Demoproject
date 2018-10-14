@@ -21,7 +21,7 @@ class PostController extends Controller
             'title' => 'New Title ~~~',
             'posts' => Post::all()
         ]);*/
-        return Post::simplePaginate(10);
+        return Post::simplePaginate(8);
     }
 
     /**

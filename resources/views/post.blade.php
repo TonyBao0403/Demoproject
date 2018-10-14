@@ -2,13 +2,52 @@
 
 @section('script')
 <script>
-    $.getJSON('/api/posts/',function(data){
-        for(var index in data){
-            var obj = data[index];
+
+function getQueryParams(qs) {
+    qs = qs.split('+').join(' ');
+
+    var params = {},
+        tokens,
+        re = /[?&]?([^=]+)=([^&]*)/g;
+
+    while (tokens = re.exec(qs)) {
+        params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+    }
+
+    return params;
+}
+var query = getQueryParams(document.location.search);
+
+var page = '';
+if(query.page != undefined){
+    page = '?page=' + query.page;
+}
+
+
+$(function(){
+    $.getJSON('/api/posts/' + page,function(resp){
+        for(var index in resp.data){
+            var obj = resp.data[index];
             $('#tbody').append( '<tr><td>' + obj.id + '</td><td><a href=" /posts/'+ obj.id + '">'+ obj.title + '</a></td></tr>');
         }
         
+        if(resp.next_page_url == null && resp.prev_page_url == null){
+            $('#btn-next').hide();
+            $('#btn-pre').hide();
+        }
+        else{
+            if(resp.next_page_url == null){
+                $('#btn-next').hide();
+                $('#btn-pre').attr('href',resp.prev_page_url.replace('api/',''));
+            }
+            else if(resp.prev_page_url == null){
+                $('#btn-pre').hide();
+                $('#btn-next').attr('href',resp.next_page_url.replace('api/',''));
+            }
+        }
+        
     })
+})
 </script>
 @endsection
 
@@ -27,6 +66,8 @@
                     
                 </tbody>
             </table>
+            <a href="" class="btn btn-primary" id="btn-pre">Previous</a>
+            <a href="" class="btn btn-primary" id="btn-next">Next</a>
         </div>
     </div>
 
