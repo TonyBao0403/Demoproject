@@ -21,12 +21,18 @@ $(function() {
             }
         })
     })*/
+    var sum=0;
+    var product = [];
     $.getJSON('/products/list_cart', function(resp) {
         for( var index in resp ) {
             var obj = resp[index];
+            sum = sum + obj.price;
+            console.log(sum);
             $('#tbody').append('<tr><td>' + obj.id + '</td><td>' + obj.name + '</td><td>' + obj.price + '</td>' + 
                                 '</tr>');
+            
         }
+        $('#sum').append(sum);
     });
 });
 </script>
@@ -50,6 +56,9 @@ $(function() {
 
             </tbody>
         </table>
+        <div >
+            <h3 id="sum">商品金額總共 :  </h3>
+        </div>
         <a href="/products" class="btn btn-danger">繼續購物</a>
     </div>
 </div>
