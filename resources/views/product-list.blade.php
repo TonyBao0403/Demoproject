@@ -12,15 +12,25 @@ $(function() {
             }
         });
     });*/
+    var btn;
     $(document).on('click','.btn-add-cart',function(){
+        btn = 0;
         var id = $(this).data('id');
         console.log(id);
         $.get('/products/add_cart/'+ id, {} , function(resp){
             if(resp.status){
                 alert("加入購物車成功");
+                //$('#btn-buy').show();
             }
         })
     })
+    /*if(btn == 0){
+        $('#btn-buy').show();
+    }
+    else {
+        $('#btn-buy').hide();
+    }*/
+    console.log(btn);
     $.getJSON('/api/products', function(resp) {
         for( var index in resp ) {
             var obj = resp[index];
@@ -51,7 +61,7 @@ $(function() {
 
             </tbody>
         </table>
-        <a href="/cart" class="btn btn-primary">結帳</a>
+        <a href="/cart" class="btn btn-primary" id="btn-buy">結帳</a>
     </div>
 </div>
 

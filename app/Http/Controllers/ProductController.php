@@ -37,7 +37,8 @@ class ProductController extends Controller
         $arr[] = $id;
         $request->session()->put('cart',json_encode($arr));
         return [
-            'status' => true
+            'status' => true,
+            'cart' => $request->session()->put('cart',json_encode($arr))
         ];
     }
 
