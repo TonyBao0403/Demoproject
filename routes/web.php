@@ -35,3 +35,8 @@ Route::get('/products','ProductController@list');
 Route::get('/products/add_cart/{id}','ProductController@add_cart');
 Route::get('/products/list_cart','ProductController@list_cart');
 Route::get('/cart','ProductController@cart');
+
+Route::get('/chat', 'ChatController@index');
+Route::get('/chat/all', 'ChatController@all');
+Route::get('/chat/all_better', 'ChatController@all_better');
+Route::post('/chat', 'ChatController@create');
