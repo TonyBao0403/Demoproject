@@ -15,28 +15,41 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/posts',function(){
-    return view('post');
+Route::group(['prefix' => 'posts'],function(){
+    Route::get('/','PostController@index');
+    Route::get('/{id}','PostController@post_single');
 });
-Route::get('/posts/{id}',function($id){
-    return view('post_single',[
-        'id' => $id
-    ]);
-});
+
+
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/user','UserController@index');
-Route::get('/user/delete/{id}','UserController@destroy');
-Route::post('/user','UserController@store');
+Route::group(['prefix' => 'user'],function(){
+    Route::get('/','UserController@index');
+    Route::get('/delete/{id}','UserController@destroy');
+    Route::post('/','UserController@store');
+});
 
-Route::get('/products','ProductController@list');
-Route::get('/products/add_cart/{id}','ProductController@add_cart');
-Route::get('/products/list_cart','ProductController@list_cart');
+Route::group(['prefix' => 'products'],function(){
+    Route::get('/products','ProductController@list');
+    Route::get('/products/add_cart/{id}','ProductController@add_cart');
+    Route::get('/products/list_cart','ProductController@list_cart');
+});
+
 Route::get('/cart','ProductController@cart');
 
-Route::get('/chat', 'ChatController@index');
-Route::get('/chat/all', 'ChatController@all');
-Route::get('/chat/all_better', 'ChatController@all_better');
-Route::post('/chat', 'ChatController@create');
+Route::group(['prefix' => 'chat'],function(){
+    Route::get('/', 'ChatController@index');
+    Route::get('/all', 'ChatController@all');
+    Route::get('/all_better', 'ChatController@all_better');
+    Route::post('/', 'ChatController@create');
+});
+
+
+
+Route::get('/update',function(){
+    DB::update('update products set name = "APPLE" where id =?',[1]);
+});
+
+

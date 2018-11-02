@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Post; 
 use Log;
 use Validator;
+use Auth;
 
 class PostController extends Controller
 {
@@ -14,6 +15,16 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    /*public function __construct() {
+        $this->middleware('auth');
+    }*/
+
+    public function api_index()
+    {
+        return Post::simplePaginate(8);
+    }
+
     public function index()
     {
         //return Post::all();
@@ -21,7 +32,7 @@ class PostController extends Controller
             'title' => 'New Title ~~~',
             'posts' => Post::all()
         ]);*/
-        return Post::simplePaginate(8);
+        return view('post');
     }
 
     /**
@@ -42,6 +53,8 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        
+        dd(Auth);
         $validator = Validator::make($request->all(),[
             'title' => 'required|max:10',//規定長度最大為10
             'note'  => 'required',
@@ -51,7 +64,8 @@ class PostController extends Controller
             return ['errors'=>$validator->errors()];
             //return $validator->errors();
         }
-        return Post::create($request -> all());
+        Post::create($request -> all());
+        return redirect('/posts');
     }
 
     /**
@@ -97,5 +111,11 @@ class PostController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function post_single($id){
+        return view('post_single',[
+            'id' => $id
+        ]);
     }
 }

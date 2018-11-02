@@ -22,7 +22,7 @@
                                         <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                                 @endif
-                                
+
                             </div>
                         </div>
 
@@ -37,6 +37,7 @@
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                 @endif
+                                
                             </div>
                         </div>
 
