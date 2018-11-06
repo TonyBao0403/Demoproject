@@ -18,6 +18,7 @@ Route::get('/', function () {
 Route::group(['prefix' => 'posts'],function(){
     Route::get('/','PostController@index');
     Route::get('/{id}','PostController@post_single');
+    Route::get('/delete/{id}','PostController@destroy');
 });
 
 
@@ -32,9 +33,9 @@ Route::group(['prefix' => 'user'],function(){
 });
 
 Route::group(['prefix' => 'products'],function(){
-    Route::get('/products','ProductController@list');
-    Route::get('/products/add_cart/{id}','ProductController@add_cart');
-    Route::get('/products/list_cart','ProductController@list_cart');
+    Route::get('/','ProductController@list');
+    Route::get('/add_cart/{id}','ProductController@add_cart');
+    Route::get('/list_cart','ProductController@list_cart');
 });
 
 Route::get('/cart','ProductController@cart');

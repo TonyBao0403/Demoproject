@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Validator;
+use DB;
 
 class UserController extends Controller
 {
@@ -13,11 +14,18 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct() {
+        $this->middleware('auth');
+        return true;
+    }
+
     public function index()
     {
-        return view('user',[
+        $users = DB::table('users')->paginate(4);
+        return view('user', ['users' => $users]);
+        /*return view('user',[
             'users' => User::all()
-        ]);
+        ]);*/
     }
 
     /**

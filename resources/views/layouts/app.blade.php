@@ -46,7 +46,8 @@
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
-                            <li><a href="/cart">購物車</a></li>
+                            <li><a href="/chat">聊天室</a></li>
+                            <li><a href="/products">購物</a></li>
                             <li><a href="/posts">Post 管理</a></li>
                             <li><a href="/user">User 管理</a></li>
                             <li class="dropdown">

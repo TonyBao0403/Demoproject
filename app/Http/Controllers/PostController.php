@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests;
 use App\Post; 
 use Log;
 use Validator;
 use Auth;
+use DB;
 
 class PostController extends Controller
 {
@@ -16,9 +18,10 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    /*public function __construct() {
-        $this->middleware('auth');
-    }*/
+    public function __construct() {
+        //$this->middleware('auth');
+        return true;
+    }
 
     public function api_index()
     {
@@ -32,6 +35,8 @@ class PostController extends Controller
             'title' => 'New Title ~~~',
             'posts' => Post::all()
         ]);*/
+        /*$posts = DB::table('posts')->paginate(4);
+        return view('post', ['posts' => $posts]);*/
         return view('post');
     }
 
@@ -54,7 +59,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         
-        dd(Auth);
+        //console.log(Auth);
         $validator = Validator::make($request->all(),[
             'title' => 'required|max:10',//規定長度最大為10
             'note'  => 'required',
@@ -110,7 +115,8 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Post::destroy($id);
+        return redirect('/posts');
     }
 
     public function post_single($id){

@@ -25,10 +25,12 @@ if(query.page != undefined){
 
 
 $(function(){
+    
     $.getJSON('/api/posts/' + page ,function(resp){
         for(var index in resp.data){
             var obj = resp.data[index];
-            $('#tbody').append( '<tr><td>' + obj.id + '</td><td><a href=" /posts/'+ obj.id + '">'+ obj.title + '</a></td></tr>');
+            $('#tbody').append( '<tr><td>' + obj.id + '</td><td><a href=" /posts/'+ obj.id + '">'+ obj.title + '</a></td>' +
+                                '<td><button data-id="'+ obj.id +'" class="btn btn-sm btn-primary btn-del">刪除</button></td></tr>');
         }
         
         if(resp.next_page_url == null && resp.prev_page_url == null){
@@ -47,7 +49,17 @@ $(function(){
         }
         
     })
+    
+    $(document).on('click','.btn-del',function(){
+        if(confirm('Delete'+ $(this).data('id'))){
+            location.href = '/posts/delete/'+ $(this).data('id');
+        }
+    })
 })
+
+    
+
+
 </script>
 @endsection
 
@@ -60,6 +72,7 @@ $(function(){
                     <tr>
                         <th>#</th>
                         <th>Title</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody id="tbody">
