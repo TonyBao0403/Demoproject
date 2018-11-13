@@ -19,7 +19,7 @@ Route::group(['prefix' => 'posts'],function(){
     Route::get('/','PostController@index')->middleware('auth');
     Route::get('/single/{id}','PostController@post_single');
     Route::get('/delete/{id}','PostController@destroy');
-    
+    Route::post('/','PostController@store');
     Route::get('/test','PostController@test');
 });
 
@@ -29,7 +29,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['prefix' => 'user'],function(){
-    Route::get('/','UserController@index');
+    Route::get('/','UserController@index')->middleware('auth');
     Route::get('/delete/{id}','UserController@destroy');
     Route::post('/','UserController@store');
 });
