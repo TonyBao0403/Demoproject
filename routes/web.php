@@ -16,9 +16,11 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix' => 'posts'],function(){
-    Route::get('/','PostController@index');
-    Route::get('/{id}','PostController@post_single');
+    Route::get('/','PostController@index')->middleware('auth');
+    Route::get('/single/{id}','PostController@post_single');
     Route::get('/delete/{id}','PostController@destroy');
+    
+    Route::get('/test','PostController@test');
 });
 
 
@@ -45,6 +47,8 @@ Route::group(['prefix' => 'chat'],function(){
     Route::get('/all', 'ChatController@all');
     Route::get('/all_better', 'ChatController@all_better');
     Route::post('/', 'ChatController@create');
+
+    Route::get('/original','ChatController@original');
 });
 
 

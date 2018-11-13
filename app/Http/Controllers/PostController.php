@@ -9,6 +9,8 @@ use Log;
 use Validator;
 use Auth;
 use DB;
+use App\Chat;
+use Input;
 
 class PostController extends Controller
 {
@@ -20,11 +22,11 @@ class PostController extends Controller
 
     public function __construct() {
         //$this->middleware('auth');
-        return true;
     }
 
     public function api_index()
     {
+        
         return Post::simplePaginate(8);
     }
 
@@ -38,6 +40,12 @@ class PostController extends Controller
         /*$posts = DB::table('posts')->paginate(4);
         return view('post', ['posts' => $posts]);*/
         return view('post');
+        /*$author = Auth::user()->id;
+        $users = Chat::all();
+        foreach($users as $user){
+            $user->author = $user->author()->first()->name;
+        }
+        return $user;*/
     }
 
     /**
@@ -58,18 +66,40 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        
-        //console.log(Auth);
-        $validator = Validator::make($request->all(),[
+        Auth::user()->id;
+        /*$validator = Validator::make($request->all(),[
             'title' => 'required|max:10',//規定長度最大為10
             'note'  => 'required',
             'author'=> 'required|integer'//規定必須為整數
+            //'author'=> Auth::user()->id
         ]);
+        
         if($validator->fails()){
             return ['errors'=>$validator->errors()];
             //return $validator->errors();
         }
-        Post::create($request -> all());
+        
+        Post::create($request->all());*/
+        $input = $request->all();
+        $rules = [
+            'title' => 'required|max:10',
+            'note'  => 'required|min:1'
+        ];
+        $validator = Validator::make($input,$rules);
+        if($validator->passes()){
+            $posts = new Post;
+            $posts->title = $input['title'];
+            $posts->note = $input['note'];
+            $posts->author = Auth::user()->id;
+            $posts->save();
+
+            Post::create($posts->all());
+        }
+        if($validator->fails()){
+            return ['errors'=>$validator->errors()];
+            //return $validator->errors();
+        }
+
         return redirect('/posts');
     }
 
@@ -80,10 +110,19 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        return Post::findOrFail($id); 
+    {   
+        $auts = Post::findOrFail($id);
+        
+        $auts->author = $auts->author()->first()->name;
+        
+        return $auts; 
     }
 
+    public function test()
+    {
+        $author = Auth::user();
+        return $author;
+    }
     /**
      * Show the form for editing the specified resource.
      *

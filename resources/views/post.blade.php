@@ -29,7 +29,7 @@ $(function(){
     $.getJSON('/api/posts/' + page ,function(resp){
         for(var index in resp.data){
             var obj = resp.data[index];
-            $('#tbody').append( '<tr><td>' + obj.id + '</td><td><a href=" /posts/'+ obj.id + '">'+ obj.title + '</a></td>' +
+            $('#tbody').append( '<tr><td>' + obj.id + '</td><td><a href=" /posts/single/'+ obj.id + '">'+ obj.title + '</a></td>' +
                                 '<td><button data-id="'+ obj.id +'" class="btn btn-sm btn-primary btn-del">刪除</button></td></tr>');
         }
         
@@ -121,22 +121,21 @@ $(function(){
                                 @endif
                             </div>
                         </div>
-
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">Author</label>
+                        <!--
+                        <div class="form-group{{ $errors->has('author') ? ' has-error' : '' }}">
+                            <label for="author" class="col-md-4 control-label">Author</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="integer" class="form-control" name="author" value="{{ old('email') }}" required>
+                                <input id="author" type="integer" class="form-control" name="author" value="{{ old('author') }}" required>
 
-                                @if ($errors->has('email'))
+                                @if ($errors->has('author'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
+                                        <strong>{{ $errors->first('author') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
-                
-
+                        -->
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
