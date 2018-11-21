@@ -8,7 +8,7 @@
 
         // 偵測 Form 送出事件
         $('#chat-form').submit(function(event) {
-            setTimeout(getUpdate, 1000);
+            //setTimeout(getUpdate, 1000);
             // 阻止 Form 透過預設方法送出，阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
             event.preventDefault();
 
@@ -41,7 +41,7 @@
             $('#chat-disp').val(str);
         });
         // 設定 1 秒後再呼叫一次自己
-        //setTimeout(getUpdate, 1000);
+        setTimeout(getUpdate, 1000);
     }
 </script>
 @endsection

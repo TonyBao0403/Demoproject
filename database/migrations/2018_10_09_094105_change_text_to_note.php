@@ -27,7 +27,7 @@ class ChangeTextToNote extends Migration
     public function down()
     {
         Schema::table('posts', function (Blueprint $table) {
-            $tabel->dropColumn('note');
+            $table->dropColumn('note');
             $table->string('text');
         });
     }

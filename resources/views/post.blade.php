@@ -32,8 +32,11 @@ $(function(){
             $('#tbody').append( '<tr><td>' + obj.id + '</td><td><a href=" /posts/single/'+ obj.id + '">'+ obj.title + '</a></td>' +
                                 '<td><button data-id="'+ obj.id +'" class="btn btn-sm btn-primary btn-del">刪除</button></td></tr>');
         }
-        
-        if(resp.next_page_url == null && resp.prev_page_url == null){
+        if(resp.next_page_url != null && resp.prev_page_url != null){
+            $('#btn-pre').attr('href',resp.prev_page_url.replace('api/',''));
+            $('#btn-next').attr('href',resp.next_page_url.replace('api/',''));
+        }
+        else if(resp.next_page_url == null && resp.prev_page_url == null){
             $('#btn-next').hide();
             $('#btn-pre').hide();
         }
@@ -47,6 +50,7 @@ $(function(){
                 $('#btn-next').attr('href',resp.next_page_url.replace('api/',''));
             }
         }
+        
         
     })
     
@@ -91,7 +95,7 @@ $(function(){
                 <div class="panel-heading">Add Post</div>
 
                 <div class="panel-body">
-                <form class="form-horizontal" role="form" method="POST" action="/api/posts">
+                <form class="form-horizontal" role="form" method="POST" action="/posts">
                         {{ csrf_field() }}  
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">

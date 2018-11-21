@@ -27,7 +27,7 @@ class PostController extends Controller
     public function api_index()
     {
         
-        return Post::simplePaginate(8);
+        return Post::simplePaginate(4);
     }
 
     public function index()
@@ -66,24 +66,24 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        Auth::user()->id;
         /*$validator = Validator::make($request->all(),[
             'title' => 'required|max:10',//規定長度最大為10
             'note'  => 'required',
-            'author'=> 'required|integer'//規定必須為整數
-            //'author'=> Auth::user()->id
+            //'author'=> 'required|integer',//規定必須為整數
+            
         ]);
-        
         if($validator->fails()){
             return ['errors'=>$validator->errors()];
             //return $validator->errors();
         }
-        
+        $request->all()->author = 1;
+        dd($request->all());
         Post::create($request->all());*/
+
         $input = $request->all();
         $rules = [
             'title' => 'required|max:10',
-            'note'  => 'required|min:1'
+            'note'  => 'required|min:2'
         ];
         $validator = Validator::make($input,$rules);
         if($validator->passes()){
@@ -91,10 +91,9 @@ class PostController extends Controller
             $posts->title = $input['title'];
             $posts->note = $input['note'];
             $posts->author = Auth::user()->id;
-            $posts->save();
-
-            Post::create($posts->all());
+            $posts->save();     //將資料新增置資料庫，就不用再Post::create
         }
+
         if($validator->fails()){
             return ['errors'=>$validator->errors()];
             //return $validator->errors();

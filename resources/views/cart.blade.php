@@ -3,16 +3,8 @@
 @section('script')
 <script>
 $(function() {
-    /*$(document).on('click', '.btn-add-cart', function() {
-        var id = $(this).data('id');
-        console.log(id + ' clicked');
-        $.get('/products/add_cart/' + id, {}, function(resp) {
-            if( resp.status ) {
-                alert('加入購物車成功');
-            }
-        });
-    });
-    $(document).on('click','.btn-add-cart',function(){
+    
+    /*$(document).on('click','.btn-del',function(){
         var id = $(this).data('id');
         console.log(id);
         $.get('/products/add_cart/'+ id, {} , function(resp){
@@ -21,18 +13,26 @@ $(function() {
             }
         })
     })*/
-    var sum=0;
-    var product = [];
+
+    var sum=0;   //顯示總額
     var txt="";
-    
+    $(document).on('click','.btn-del',function(){
+        $id = $(this).data('id');
+        $name = $(this).data('name');
+        console.log("刪除 " + $name);
+        if(confirm("確定要刪除此商品 "+ $name +" 嗎???")){
+            location.href = '/products/delete/' + $id;
+        }
+    });
+
     try{
         $.getJSON('/products/list_cart', function(resp) {
             for( var index in resp ) {
                 var obj = resp[index];
                 sum = sum + obj.price;
                 console.log(sum);
-                $('#tbody').append('<tr><td>' + obj.id + '</td><td>' + obj.name + '</td><td>' + obj.price + '</td>' + 
-                                    '</tr>');
+                $('#tbody').append('<tr><td>' + obj.id + '</td><td>' + obj.name + '</td><td>' + obj.price + '</td><td>'+ obj.amount +'</td>'+
+                                    '<td><button id="'+ obj.id +'" data-id="'+ obj.id +'" data-name="'+ obj.name +'" class="btn btn-primary btn-del">刪除</button></td></tr>');
                 
             }
             $('#sum').append(sum);
@@ -56,9 +56,11 @@ $(function() {
                 <tr>
                     <th>#</th>
                     <th>商品名稱</th>
+                    <th>數量</th>
                     <th>
                         價格
                     </th>
+                    <th style="width:100px">刪除訂單</th>
                 </tr>
             </thead>
             <tbody id="tbody">

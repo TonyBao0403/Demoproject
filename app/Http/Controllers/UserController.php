@@ -15,13 +15,18 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function __construct() {
-        $this->middleware('auth');
+        //$this->middleware('auth');
         return true;
+    }
+
+    public function api_index()
+    {
+        return User::simplePaginate(4);
     }
 
     public function index()
     {
-        $users = DB::table('users')->paginate(6);
+        $users = DB::table('users')->paginate(4);
         return view('user', ['users' => $users]);
         /*return view('user',[
             'users' => User::all()
@@ -46,17 +51,38 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        /*$validator = Validator::make($request->all(),[
             'name' => 'required|max:10',
             'email'  => 'required|unique:users',
             'password'=> 'required|confirmed'
         ]);
+        dd($request->all());
         if($validator->fails()){
             return redirect('/user')
                     ->withErrors($validator)
                     ->withInput();
         }
-        User::create($request -> all());
+        User::create($request -> all());*/
+
+        $input = $request->all();
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ];
+        $validator = Validator::make($input,$rules);
+        if($validator -> passes()){
+            $user = new User;
+            $user->name = $input['name'];
+            $user->email = $input['email'];
+            $user->password = bcrypt($input['password']);
+            $user->save();
+        }
+        if($validator->fails()){
+            return redirect('/user')
+                    ->withErrors($validator)
+                    ->withInput();
+        }
 
         return redirect('/user');
     }
