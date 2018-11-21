@@ -29,9 +29,9 @@ $(function() {
         $.getJSON('/products/list_cart', function(resp) {
             for( var index in resp ) {
                 var obj = resp[index];
-                sum = sum + obj.price;
+                sum = sum + obj.price * obj.amount;
                 console.log(sum);
-                $('#tbody').append('<tr><td>' + obj.id + '</td><td>' + obj.name + '</td><td>' + obj.price + '</td><td>'+ obj.amount +'</td>'+
+                $('#tbody').append('<tr><td>' + obj.id + '</td><td>' + obj.name + '</td><td>' + obj.amount + '</td><td>'+ obj.price +'</td><td>'+ obj.price * obj.amount +'</td>' +  
                                     '<td><button id="'+ obj.id +'" data-id="'+ obj.id +'" data-name="'+ obj.name +'" class="btn btn-primary btn-del">刪除</button></td></tr>');
                 
             }
@@ -57,9 +57,8 @@ $(function() {
                     <th>#</th>
                     <th>商品名稱</th>
                     <th>數量</th>
-                    <th>
-                        價格
-                    </th>
+                    <th>單價</th>
+                    <th>總額</th>
                     <th style="width:100px">刪除訂單</th>
                 </tr>
             </thead>

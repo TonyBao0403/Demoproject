@@ -30,15 +30,15 @@ class ProductController extends Controller
 
     
     public function add_cart(Request $request, $id, $sum){
-            $pro = $request->session()->get('cart_pro');
-            $amo = $request->session()->get('cart_amo');
+            $pro = session()->get('cart_pro');
+            $amo = session()->get('cart_amo');
             $arr_pro = [];
             $arr_amo = [];
             $i=0;
             $x = true;
             if($pro != null){
-                $arr_pro = json_decode($pro);
-                $arr_amo = json_decode($amo);
+                $arr_pro = $pro;
+                $arr_amo = $amo;
             }
             for($i=0;$i<count($arr_pro);$i++){
                 if($arr_pro[$i]==$id) {
@@ -46,16 +46,16 @@ class ProductController extends Controller
                     break;
                 }
             }
-
+ 
             if($x == false) {
                 $arr_amo[$i] += $sum;
-                $request->session()->put('cart_amo',json_encode($arr_amo));
+                $request->session()->put('cart_amo',$arr_amo);
             }
             else{
                 $arr_pro[$i] = $id;
                 $arr_amo[$i] = $sum; 
-                $request->session()->put('cart_pro',json_encode($arr_pro));
-                $request->session()->put('cart_amo',json_encode($arr_amo));
+                $request->session()->put('cart_pro',$arr_pro);
+                $request->session()->put('cart_amo',$arr_amo);
             }
 
 
@@ -69,8 +69,8 @@ class ProductController extends Controller
 
             return [
                 'status' => true,
-                'cart_pro' => $request->session()->put('cart_pro',json_encode($arr_pro)),
-                'cart_amo' => $request->session()->put('cart_amo',json_encode($arr_amo)),
+                'cart_pro' => session()->put('cart_pro',$arr_pro),
+                'cart_amo' => session()->put('cart_amo',$arr_amo),
                 'arr_pro'  => $arr_pro
             ];
         
@@ -79,8 +79,8 @@ class ProductController extends Controller
 
 
     public function list_cart(Request $request){
-        $pro_list = json_decode($request->session()->get('cart_pro'));
-        $amo_list = json_decode($request->session()->get('cart_amo'));
+        $pro_list = session()->get('cart_pro');
+        $amo_list = session()->get('cart_amo');
         $prod_list = [];
         foreach($pro_list as $id){
             $prod_list[] = Product::find($id);
@@ -88,7 +88,7 @@ class ProductController extends Controller
         
         for($i=0;$i<count($pro_list);$i++)
         {
-            $prod_list[$i]["price"] = $prod_list[$i]["price"] * $amo_list[$i];
+            //$prod_list[$i]["price"] = $prod_list[$i]["price"] * $amo_list[$i];            //計算單項產品總額，目前挪到前端去運算。
             $prod_list[$i]["amount"] = $amo_list[$i];
         }
         return $prod_list;
@@ -114,11 +114,12 @@ class ProductController extends Controller
         return redirect('/products');
     }
     public function test2(){
-        //$test = ['jack','tony','hadnsome'];
+        $test = ['jack','tony','hadnsome'];
         $product = array([1,2,3,4]);
-        Session::push('cart', $product);
+        Session::push('cart', $test);
         $value = Session::get('cart');
-        dd($value);
+        //dd($value);
+        dd(session()->all());
     }
 
      /**
@@ -179,14 +180,17 @@ class ProductController extends Controller
      */
     public function destroy(Request $request, $id)
     {   
-        $pro_list = json_decode($request->session()->get('cart_pro'));
-        $amo_list = json_decode($request->session()->get('cart_amo'));
-        //$pro_list[4]= 0;
-        $amo_list[4] += 6;
-        //$request->session()->put('cart_pro',json_encode($pro_list));
-        $request->session()->put('cart_amo',json_encode($amo_list));
-        //Session::forget($amo_list[0]);
-        //return view('cart');
-        dd($amo_list);
+        $pro_list = session()->get('cart_pro');
+        $amo_list = session()->get('cart_amo');
+        $del_value = $id;
+        unset($pro_list[array_search($del_value,$pro_list)]);           //刪除陣列某一屬性
+        unset($amo_list[array_search($del_value,$amo_list)]);
+        $pro_list = array_values($pro_list);            //重新編排陣列，往前移
+        $amo_list = array_values($amo_list);
+        session()->put('cart_pro',$pro_list);           //更新session
+        session()->put('cart_amo',$amo_list);
+
+        return redirect('/cart');
+        //dd($pro_list);
     }
 }
