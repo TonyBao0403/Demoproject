@@ -103,6 +103,10 @@ class ChatController extends Controller
         return Chat::all();
     } 
 
+    public function test(Request $request){
+        dd( $request);
+    }
+
     public function create(Request $request) {
         // 取得 input POST 資料
         $message = $request->input('message');

@@ -36,8 +36,11 @@ Route::group(['prefix' => 'user'],function(){
 
 Route::group(['prefix' => 'products'],function(){
     Route::get('/','ProductController@list');
-    Route::get('/add_cart/{id}','ProductController@add_cart');
+    Route::get('/add_cart/{id}/Num/{sum}','ProductController@add_cart');
     Route::get('/list_cart','ProductController@list_cart');
+    Route::get('/delete/{id}','ProductController@destroy');
+    Route::get('/test','ProductController@test');
+    Route::get('/test2','ProductController@test2');
 });
 
 Route::get('/cart','ProductController@cart');
@@ -47,7 +50,7 @@ Route::group(['prefix' => 'chat'],function(){
     Route::get('/all', 'ChatController@all');
     Route::get('/all_better', 'ChatController@all_better');
     Route::post('/', 'ChatController@create');
-
+    Route::get('/test','ChatController@test');
     Route::get('/original','ChatController@original');
 });
 

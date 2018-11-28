@@ -14,15 +14,30 @@ $(function() {
     });*/
     var btn;
     $(document).on('click','.btn-add-cart',function(){
-        btn = 0;
-        var id = $(this).data('id');
-        console.log(id);
-        $.get('/products/add_cart/'+ id, {} , function(resp){
+        $id = $(this).data('id');
+        $sum = $('input[name="'+ $id +'"]').val();
+       if(isNaN($sum) || $sum== 0){
+           alert("請輸入數字 或 輸入不可為0");
+       }
+       else{
+        $.get('/products/add_cart/'+ $id + '/Num/' + $sum , {} , function(resp){
             if(resp.status){
                 alert("加入購物車成功");
+                //$('#' + $id + '').text("取消").css({'background-color':'red'});
+                console.log('選取數量 : ' + $sum);
+                console.log('產品編號 : ' + $id);
+                console.log('取消產品 : ' + $id);
                 //$('#btn-buy').show();
             }
-        })
+            else{
+                alert("請輸入數量!!!");
+            }
+            console.log(resp.arr_pro);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.error('Please input amount!!!');
+        }) 
+       }
+       $('input[name="'+ $id +'"]').val(""); 
     })
     /*if(btn == 0){
         $('#btn-buy').show();
@@ -30,12 +45,12 @@ $(function() {
     else {
         $('#btn-buy').hide();
     }*/
-    console.log(btn);
     $.getJSON('/api/products', function(resp) {
         for( var index in resp ) {
             var obj = resp[index];
             $('#tbody').append('<tr><td>' + obj.id + '</td><td>'+obj.name+'</td><td>'+obj.price+'</td>' + 
-                                '<td><button data-id="'+ obj.id +'" class="btn btn-sm btn-primary btn-add-cart">加入購物車</button></td></tr>');
+                                '<td><input type="text" name="' + obj.id + '" placeholder="輸入數量"></input>' + 
+                                '<button id="'+ obj.id +'" data-id="'+ obj.id +'" class="btn btn-sm btn-primary btn-add-cart" style="margin-left:10px">加入購物車</button></td></tr>');
         }
     });
 });
@@ -49,12 +64,12 @@ $(function() {
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>商品名稱</th>
-                    <th>
+                    <th style="width:70px">#</th>
+                    <th >商品名稱</th>
+                    <th style="width:100px">
                         價格
                     </th>
-                    <th>加入購物車</th>
+                    <th style="width:300px ">加入購物車</th>
                 </tr>
             </thead>
             <tbody id="tbody">
@@ -62,6 +77,7 @@ $(function() {
             </tbody>
         </table>
         <a href="/cart" class="btn btn-primary" id="btn-buy">結帳</a>
+        <!--<a href="/products/test/" class="btn btn-primary" id="btn-buy">新增產品</a>      新增刪除產品資料用-->
     </div>
 </div>
 
